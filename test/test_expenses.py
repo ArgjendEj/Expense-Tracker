@@ -1,5 +1,5 @@
 import pytest
-from expenses import (
+from expense import (
     add_expense,
     get_all_expenses,
     delete_expense,
