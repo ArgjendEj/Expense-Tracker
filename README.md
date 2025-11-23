@@ -36,3 +36,7 @@ Këtë javë u krijuan testet fillestare sipas TDD (shtim, fshirje, formatim shp
 Raport Javor – TDD
 Projekti: Expense Tracker | Java: 3 | Data: 21.11.2025
 Këtë javë u implementuan funksionet kryesore të Expense Tracker në utils.py, expenses.py dhe main.py, duke kaluar shumicën e testeve ekzistuese (Red → Green). U përmirësuan emrat e funksioneve dhe organizimi i kodit për të qenë më i qartë dhe i mirëmbajtshëm. Javën tjetër planifikohet plotësimi i funksioneve të munguar dhe sigurimi që të gjitha testet të kalojnë me sukses.
+
+Raport Javor – TDD
+Projekti: Expense Tracker | Java: 4 | Data: 24.11.2025
+Këtë javë u shtua konfigurimi CI (tests.yml) dhe u përmirësuan testet në test_expenses.py dhe test_utils.py, duke kaluar në Green. U rregulluan funksionet në expenses.py dhe utils.py sipas TDD dhe u stabilizua procesi i testimit në GitHub Actions. Javën tjetër planifikohet korrigjimi i mungesave, përmirësimi i dizajnit dhe zgjerimi i funksionaliteteve (Feature 3).
