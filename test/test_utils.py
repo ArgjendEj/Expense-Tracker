@@ -1,3 +1,10 @@
+import sys
+import os
+import pytest
+
+# Shto rrugën e projektit që Python ta gjejë utils.py
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from utils import format_currency, validate_amount
 
 def test_format_currency():
