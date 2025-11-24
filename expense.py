@@ -3,42 +3,64 @@ from datetime import datetime
 
 DB_PATH = "data/expenses.db"
 
+def get_connection():
+    """Kthen një lidhje të re me bazën e të dhënave."""
+    return sqlite3.connect(DB_PATH)
+
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''
+    """Krijon tabelën e shpenzimeve nëse nuk ekziston."""
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        '''
         CREATE TABLE IF NOT EXISTS expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             description TEXT NOT NULL,
             amount REAL NOT NULL,
             date TEXT NOT NULL
         )
-    ''')
+        '''
+    )
+
     conn.commit()
     conn.close()
 
 def add_expense(description, amount):
-    if not description or amount <= 0:
+    """Shton një shpenzim me validime."""
+    if not description or not isinstance(amount, (int, float)) or amount <= 0:
         raise ValueError("Invalid expense data")
 
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
+    conn = get_connection()
+    cursor = conn.cursor()
+
     date = datetime.now().strftime("%Y-%m-%d")
-    c.execute("INSERT INTO expenses (description, amount, date) VALUES (?, ?, ?)", (description, amount, date))
+
+    cursor.execute(
+        "INSERT INTO expenses (description, amount, date) VALUES (?, ?, ?)",
+        (description, amount, date)
+    )
+
     conn.commit()
     conn.close()
 
 def get_all_expenses():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT * FROM expenses")
-    expenses = c.fetchall()
+    """Kthen të gjitha shpenzimet si listë tuples."""
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM expenses")
+    rows = cursor.fetchall()
+
     conn.close()
-    return expenses
+    return rows
 
 def delete_expense(expense_id):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
+    """Fshin një shpenzim sipas ID-së."""
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
+
     conn.commit()
     conn.close()
