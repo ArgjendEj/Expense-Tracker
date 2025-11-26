@@ -7,6 +7,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils import format_currency, validate_amount
 
+# FEATURE 1 TESTS 
+
 def test_format_currency():
     assert format_currency(5) == "5.00 €"
 
@@ -17,9 +19,7 @@ def test_validate_amount_invalid():
     assert validate_amount(-2) is False
     assert validate_amount("a") is False
 
-# ===============================
-# FEATURE 2 — TESTE TË REJA
-# ===============================
+# FEATURE 2 TESTS 
 
 def test_format_currency_large_number():
     """Teston formatimin e një vlere shumë të madhe."""
@@ -40,3 +40,21 @@ def test_validate_amount_none():
 def test_validate_amount_empty_string():
     """String i zbrazët nuk duhet pranuar."""
     assert validate_amount("") is False
+
+# FEATURE 3 TESTS 
+
+def test_format_currency_negative():
+    """Teston formatimin e vlerave negative."""
+    assert format_currency(-123.456) == "-123.46 €"
+
+def test_format_currency_integer_float_consistency():
+    """Siguron që integers dhe floats formatohen njësoj."""
+    assert format_currency(10) == "10.00 €"
+    assert format_currency(10.0) == "10.00 €"
+
+def test_validate_amount_edge_cases():
+    """Teston raste kufi për validate_amount."""
+    assert validate_amount(0.0001) is True
+    assert validate_amount(-0.0001) is False
+    assert validate_amount([]) is False
+    assert validate_amount({}) is False

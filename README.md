@@ -5,9 +5,10 @@ Funksionalitetet kryesore:
 •	Shto shpenzim (emër + shumë)
 •	Shiko të gjitha shpenzimet
 •	Fshi shpenzim sipas ID-së
+•	Përditëso shpenzim sipas ID-së
 •	Ruajtje e qëndrueshme në SQLite
 •	Testim i kodit për siguri dhe qëndrueshmëri
-User Stories: përdoruesi mund të shtojë, shikojë dhe fshijë shpenzime, ndërsa zhvilluesi sigurohet që funksionet të jenë të mbuluara me teste.
+User Stories: përdoruesi mund të shtojë, shikojë, fshijë shpenzime dhe përditëson shpenzime, ndërsa zhvilluesi sigurohet që funksionet të jenë të mbuluara me teste.
 
 Tech Stack:
 •	Python 3 – logjika e aplikacionit
@@ -31,23 +32,25 @@ Expense-Tracker/
 
 Red-Green-Refactor Cycle – SmartExpense Tracker
 1️⃣ Red Phase (Testet që dështojnë)
-•	Qëllimi: Shkrimi i testeve për funksionet kryesore: add_expense(), get_all_expenses(), delete_expense() dhe funksionet ndihmëse në utils.py.
+•	Qëllimi: Shkrimi i testeve për funksionet kryesore: add_expense(), get_all_expenses(), delete_expense(), update_expense() dhe funksionet ndihmëse në utils.py.
 •	Aktivitetet:
 o	Krijova testet në tests/test_expenses.py dhe tests/test_utils.py.
-o	Testet për add_expense() dhe delete_expense() dështuan, sepse funksionaliteti nuk ishte implementuar ende.
+o	Testet për add_expense(), delete_expense() dhe update_expense() dështuan, sepse funksionaliteti nuk ishte implementuar ende.
+
 2️⃣ Green Phase (Kod që kalon testet)
 •	Qëllimi: Implementimi i kodit minimal që bën testet të kalojnë.
 •	Aktivitetet:
-o	Implementova add_expense(), get_all_expenses(), delete_expense() në expenses.py.
+o	Implementova add_expense(), get_all_expenses(), delete_expense() dhe update_expense() në expenses.py.
 o	Implementova format_currency() dhe validate_amount() në utils.py.
 •	Rezultati: Të gjitha testet kaluan me sukses.
+
 3️⃣ Refactor Phase (Përmirësimi i kodit pa ndryshuar funksionalitetin)
 •	Qëllimi: Përmirësimi i strukturës, modularitetit dhe lexueshmërisë së kodit.
 •	Aktivitetet:
-o	Funksionet e shpenzimeve u grumbulluan në expenses.py.
+o	Funksionet e menaxhimit të shpenzimeve u grumbulluan në expenses.py dhe funksioni update_expense() u integrua në mënyrë të modularizuar.
 o	Funksionet ndihmëse u vendosën në utils.py.
-o	Testet u ruajtën për të garantuar që ndryshimet nuk prishin funksionalitetin.
-•	Rezultati: Kodi është modular, i testueshëm dhe i qëndrueshëm.
+o	Testet u ruajtën për të garantuar që ndryshimet nuk prekin funksionalitetin.
+•	Rezultati: Kodi është modular, i testueshëm dhe i qëndrueshëm, me të gjitha funksionet kryesore të shpenzimeve të mbuluara nga testet.
 
 Përditësimi i Arkitekturës – SmartExpense Tracker
 Arkitektura Modulare:
@@ -56,6 +59,7 @@ Arkitektura Modulare:
 o	add_expense() – shton shpenzime në SQLite
 o	get_all_expenses() – lexon të gjitha shpenzimet
 o	delete_expense() – fshin shpenzime sipas ID-së
+o   update_expense() – përditëson shpenzime ekzistuese sipas ID-së
 o	init_db() – inicializon bazën e të dhënave
 •	utils.py – Funksione ndihmëse:
 o	format_currency() – formaton shumën në monedhë
@@ -67,15 +71,16 @@ Përfitimet e dizajnit modular:
 •	Modularizim i qartë i logjikës dhe funksioneve ndihmëse
 •	Testueshmëri e lartë për secilin modul
 •	Ruajtje e qëndrueshme e të dhënave dhe integrim i thjeshtë me CI/CD
+
 Test Coverage Snapshot (pytest + pytest-cov):
 Name                    Stmts   Miss  Cover
 -------------------------------------------
-expenses.py                 33      0   100%
-tests/test_expenses.py      34      0   100%
-tests/test_utils.py         22      0   100%
-utils.py                    11      2    82%
+expense.py                 49      2    96%
+test\test_expenses.py      52      0   100%
+test\test_utils.py         32      0   100%
+utils.py                   11      2    82%
 -------------------------------------------
-TOTAL                      100      2    98%
+TOTAL                     144      4    97%
 
 Shpjegimi i “tests.yml” per CI passing
 •  Trigger – Aktivizohet kur bëhet push ose pull_request në branch-in main.
@@ -88,30 +93,38 @@ Shpjegimi i “tests.yml” per CI passing
 •	Upload test coverage report – Ngarkon raportin si artifact në GitHub për ta shkarkuar.
 
 
-Shpjegimi i test_expenses.py per Feature 1 dhe 2
-•  setup_function() – Pastron bazën e të dhënave para çdo testi që testet të jenë të izoluar (TDD).
-•  Feature 1 (Shtimi i shpenzimeve)
-•	test_add_expense() – Kontrollon që një shpenzim i vetëm shtohet.
-•	test_add_multiple_expenses() – Kontrollon që disa shpenzime shtohen njëherësh.
-•	test_add_invalid_expense() – Kontrollon që shtimi i të dhënave të pavlefshme hedh gabim (ValueError).
-•	
-•  Feature 2 (Fshirja e shpenzimeve)
+Shpjegimi i test_expenses.py per Feature 1,2 dhe 3 
+•  setup_function() – Pastron bazën e të dhënave para çdo testi.
+
+•  Feature 1 – Shtimi i shpenzimeve
+•	test_add_expense() – Shton një shpenzim të vetëm.
+•	test_add_multiple_expenses() – Shton disa shpenzime njëherësh.
+•	test_add_invalid_expense() – Kontrollon gabimet për të dhëna të pavlefshme.
+
+•  Feature 2 – Fshirja e shpenzimeve
 •	test_delete_expense() – Kontrollon që një shpenzim mund të fshihet.
 •  Extra validation
-•	test_database_initialization() – Kontrollon që funksioni get_all_expenses() kthen një listë pas inicializimit të DB.
+•	test_database_initialization() – Kontrollon që DB kthehet si listë pas inicializimit.
 
+•  Feature 3 – Përditësimi i shpenzimeve
+•	test_update_expense() – Përditëson emrin dhe shumën e një shpenzimi ekzistues.
+•	test_update_expense_invalid() – Kontrollon gabimet për të dhëna të pavlefshme gjatë përditësimit.
+•	test_update_expense_not_found() – Kontrollon gabimin kur përditësohet një ID që nuk ekziston.
 
-Shpjegimi i test_utils.py per  Feature 1 dhe 2
-•  Testet për format_currency()
-•	test_format_currency() – Kontrollon që një numër i thjeshtë formatizohet si "5.00 €".
-•	test_format_currency_large_number() – Kontrollon që numrat shumë të mëdhenj formatizohen si duhet.
-•	test_format_currency_with_float() – Rrotullon numrat me dhjetore tek 2 shifra pas presjes.
-•  Testet për validate_amount()
+Shpjegimi i test_utils.py per  Feature 1,2 dhe 3 
+•   Feature 1 – Teste bazë
+•	test_format_currency() – Formaton një numër të thjeshtë.
 •	test_validate_amount_valid() – Numrat pozitivë pranohen.
-•	test_validate_amount_invalid() – Numrat negativë ose jo-numerikë refuzohen.
-•	test_validate_amount_zero() – 0 nuk konsiderohet i vlefshëm.
-•	test_validate_amount_none() – None refuzohet.
-•	test_validate_amount_empty_string() – String i zbrazët refuzohet.
+•	test_validate_amount_invalid() – Numrat negativë dhe jo-numerikët refuzohen.
+
+•   Feature 2 – Teste të zgjeruara
+•	Teston numra shumë të mëdhenj, floats me shumë dhjetore, zero, None, dhe string të zbrazët.
+
+•   Feature 3 – Teste avancuara / edge cases
+•	test_format_currency_negative() – Formaton vlera negative.
+•	test_format_currency_integer_float_consistency() – Siguron që integers dhe floats formatohen njësoj.
+•	test_validate_amount_edge_cases() – Teston raste kufi si vlera shumë të vogla, negative dhe tipe të tjera (lista, dict).
+
 
 Raport Javor – TDD
 Projekti: Expense Tracker | Java: 2 | Data: 12.11.2025
