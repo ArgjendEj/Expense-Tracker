@@ -8,6 +8,7 @@ Funksionalitetet kryesore:
 •	Përditëso shpenzim sipas ID-së
 •	Ruajtje e qëndrueshme në SQLite
 •	Testim i kodit për siguri dhe qëndrueshmëri
+
 User Stories: përdoruesi mund të shtojë, shikojë, fshijë shpenzime dhe përditëson shpenzime, ndërsa zhvilluesi sigurohet që funksionet të jenë të mbuluara me teste.
 
 Tech Stack:
@@ -31,6 +32,7 @@ Expense-Tracker/
     └── workflows/ └── tests.yml  # Workflow për CI (GitHub Actions) – testet automatike
 
 Red-Green-Refactor Cycle – SmartExpense Tracker
+
 1️⃣ Red Phase (Testet që dështojnë)
 •	Qëllimi: Shkrimi i testeve për funksionet kryesore: add_expense(), get_all_expenses(), delete_expense(), update_expense() dhe funksionet ndihmëse në utils.py.
 •	Aktivitetet:
@@ -53,6 +55,7 @@ o	Testet u ruajtën për të garantuar që ndryshimet nuk prekin funksionaliteti
 •	Rezultati: Kodi është modular, i testueshëm dhe i qëndrueshëm, me të gjitha funksionet kryesore të shpenzimeve të mbuluara nga testet.
 
 Përditësimi i Arkitekturës – SmartExpense Tracker
+
 Arkitektura Modulare:
 •	main.py – Ndërfaqe CLI me përdoruesin.
 •	expenses.py – Menaxhimi i shpenzimeve:
@@ -67,6 +70,7 @@ o	validate_amount() – kontrollon vlefshmërinë e shumave
 •	data/expenses.db – Baza lokale SQLite
 •	tests/ – Testet automatike me pytest, sipas modulit dhe funksionalitetit
 •	.github/workflows/tests.yml – CI workflow për ekzekutimin automatik të testeve
+
 Përfitimet e dizajnit modular:
 •	Modularizim i qartë i logjikës dhe funksioneve ndihmëse
 •	Testueshmëri e lartë për secilin modul
@@ -83,6 +87,7 @@ utils.py                   11      2    82%
 TOTAL                     144      4    97%
 
 Shpjegimi i “tests.yml” per CI passing
+
 •  Trigger – Aktivizohet kur bëhet push ose pull_request në branch-in main.
 •  Jobs → test – Përdor Ubuntu si mjedis për testim.
 •  Steps:
@@ -94,6 +99,7 @@ Shpjegimi i “tests.yml” per CI passing
 
 
 Shpjegimi i test_expenses.py per Feature 1,2 dhe 3 
+
 •  setup_function() – Pastron bazën e të dhënave para çdo testi.
 
 •  Feature 1 – Shtimi i shpenzimeve
@@ -103,7 +109,7 @@ Shpjegimi i test_expenses.py per Feature 1,2 dhe 3
 
 •  Feature 2 – Fshirja e shpenzimeve
 •	test_delete_expense() – Kontrollon që një shpenzim mund të fshihet.
-•  Extra validation
+•   Extra validation
 •	test_database_initialization() – Kontrollon që DB kthehet si listë pas inicializimit.
 
 •  Feature 3 – Përditësimi i shpenzimeve
@@ -112,6 +118,7 @@ Shpjegimi i test_expenses.py per Feature 1,2 dhe 3
 •	test_update_expense_not_found() – Kontrollon gabimin kur përditësohet një ID që nuk ekziston.
 
 Shpjegimi i test_utils.py per  Feature 1,2 dhe 3 
+
 •   Feature 1 – Teste bazë
 •	test_format_currency() – Formaton një numër të thjeshtë.
 •	test_validate_amount_valid() – Numrat pozitivë pranohen.
@@ -137,3 +144,7 @@ Këtë javë u implementuan funksionet kryesore të Expense Tracker në utils.py
 Raport Javor – TDD
 Projekti: Expense Tracker | Java: 4 | Data: 24.11.2025
 Këtë javë u shtua konfigurimi CI (tests.yml) dhe u përmirësuan testet në test_expenses.py dhe test_utils.py, duke kaluar në Green. U rregulluan funksionet në expenses.py dhe utils.py sipas TDD dhe u stabilizua procesi i testimit në GitHub Actions. Javën tjetër planifikohet korrigjimi i mungesave, përmirësimi i dizajnit dhe zgjerimi i funksionaliteteve (Feature 3).
+
+Raport Javor – TDD
+Projekti: Expense Tracker | Java: 5 | Data: 27.11.2025
+Këtë javë u zhvillua Feature 3 (update_expense) duke plotësuar logjikën në expenses.py dhe duke përmirësuar testet ekzistuese e duke shtuar raste të reja. U rrit stabiliteti i projektit dhe u arrit 97% code coverage, me të gjitha testet në Green. Javën tjetër planifikohet finalizimi i mungesave, optimizime dhe përmirësime në dokumentacion.
