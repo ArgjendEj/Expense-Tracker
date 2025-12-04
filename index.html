@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        input, textarea {
+            width: 95%;
+            padding: 10px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .hidden {
+            display: none;
+        }
+        .back-btn {
+            background-color: #444;
+        }
+        #output {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Expense Tracker</h2>
+        <!-- Menu -->
+        <div id="menu">
+            <button onclick="showAdd()">1. Shto shpenzim</button>
+            <button onclick="showAll()">2. Shiko të gjitha</button>
+            <button onclick="showDelete()">3. Fshij shpenzim</button>
+            <button onclick="showUpdate()">4. Përditëso shpenzim</button>
+        </div>
+
+        <!-- Forms -->
+        <div id="forms">
+            <!-- Add -->
+            <div id="addForm" class="hidden">
+                <h3>Shto shpenzim</h3>
+                <input id="desc" placeholder="Përshkrimi">
+                <input id="amount" type="number" placeholder="Shuma">
+                <button onclick="addExpense()">Shto</button>
+                <button class="back-btn" onclick="goBack()">Kthehu</button>
+                <p id="addResult"></p>
+            </div>
+
+            <!-- Show All -->
+            <div id="showAll" class="hidden">
+                <h3>Të gjitha shpenzimet</h3>
+                <div id="allResult"></div>
+                <button class="back-btn" onclick="goBack()">Kthehu</button>
+            </div>
+
+            <!-- Delete -->
+            <div id="deleteForm" class="hidden">
+                <h3>Fshij shpenzim</h3>
+                <input id="deleteId" type="number" placeholder="ID">
+                <button onclick="deleteExpense()">Fshij</button>
+                <button class="back-btn" onclick="goBack()">Kthehu</button>
+                <p id="deleteResult"></p>
+            </div>
+
+            <!-- Update -->
+            <div id="updateForm" class="hidden">
+                <h3>Përditëso shpenzim</h3>
+                <input id="updateId" type="number" placeholder="ID">
+                <input id="updateDesc" placeholder="Përshkrimi i ri">
+                <input id="updateAmount" type="number" placeholder="Shuma e re">
+                <button onclick="updateExpense()">Përditëso</button>
+                <button class="back-btn" onclick="goBack()">Kthehu</button>
+                <p id="updateResult"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let expenses = [];
+        let nextId = 1;
+
+        function hideAll() {
+            document.querySelectorAll("#forms > div").forEach(div => div.classList.add("hidden"));
+            document.getElementById("menu").style.display = "none";
+        }
+
+        function goBack() {
+            hideAll();
+            document.getElementById("menu").style.display = "block";
+        }
+
+        function showAdd() {
+            hideAll();
+            document.getElementById("addForm").classList.remove("hidden");
+        }
+
+        function showAll() {
+            hideAll();
+            document.getElementById("showAll").classList.remove("hidden");
+            displayAll();
+        }
+
+        function showDelete() {
+            hideAll();
+            document.getElementById("deleteForm").classList.remove("hidden");
+        }
+
+        function showUpdate() {
+            hideAll();
+            document.getElementById("updateForm").classList.remove("hidden");
+        }
+
+        // CRUD Functions
+        function addExpense() {
+            const desc = document.getElementById("desc").value;
+            const amount = parseFloat(document.getElementById("amount").value);
+
+            if (!desc || isNaN(amount)) {
+                document.getElementById("addResult").innerText = "Ju lutem plotësoni të dhënat e sakta!";
+                return;
+            }
+
+            expenses.push({ id: nextId++, desc, amount });
+            document.getElementById("addResult").innerText = `Shpenzimi u shtua me ID ${nextId-1}`;
+            document.getElementById("desc").value = "";
+            document.getElementById("amount").value = "";
+        }
+
+        function displayAll() {
+            const allDiv = document.getElementById("allResult");
+            if (expenses.length === 0) {
+                allDiv.innerHTML = "<p>Nuk ka shpenzime të regjistruara.</p>";
+                return;
+            }
+            let html = "<ul>";
+            expenses.forEach(e => {
+                html += `<li>ID: ${e.id}, Përshkrimi: ${e.desc}, Shuma: ${e.amount}€</li>`;
+            });
+            html += "</ul>";
+            allDiv.innerHTML = html;
+        }
+
+        function deleteExpense() {
+            const id = parseInt(document.getElementById("deleteId").value);
+            const index = expenses.findIndex(e => e.id === id);
+            if (index !== -1) {
+                expenses.splice(index, 1);
+                document.getElementById("deleteResult").innerText = `Shpenzimi me ID ${id} u fshi.`;
+            } else {
+                document.getElementById("deleteResult").innerText = `Shpenzimi me ID ${id} nuk u gjet.`;
+            }
+            document.getElementById("deleteId").value = "";
+        }
+
+        function updateExpense() {
+            const id = parseInt(document.getElementById("updateId").value);
+            const desc = document.getElementById("updateDesc").value;
+            const amount = parseFloat(document.getElementById("updateAmount").value);
+
+            const expense = expenses.find(e => e.id === id);
+            if (expense) {
+                if (desc) expense.desc = desc;
+                if (!isNaN(amount)) expense.amount = amount;
+                document.getElementById("updateResult").innerText = `Shpenzimi me ID ${id} u përditësua.`;
+            } else {
+                document.getElementById("updateResult").innerText = `Shpenzimi me ID ${id} nuk u gjet.`;
+            }
+
+            document.getElementById("updateId").value = "";
+            document.getElementById("updateDesc").value = "";
+            document.getElementById("updateAmount").value = "";
+        }
+    </script>
+</body>
+</html>
